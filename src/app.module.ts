@@ -8,6 +8,8 @@ import { BrandModule } from './modules/brand/brand.module';
 import { ClounidaryModule } from './common/clounidary/clounidary.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CartModule } from './modules/cart/cart.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -30,5 +32,8 @@ import { CartModule } from './modules/cart/cart.module';
     ClounidaryModule,
     CartModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
+
 })
 export class AppModule {}
