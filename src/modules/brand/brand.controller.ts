@@ -51,7 +51,7 @@ export class BrandController {
       );
       return this.brandService.createBrand(name, uploadImage.url);
     } catch (error) {
-      throw new ExceptionsHandler(error);
+      throw new ExceptionsHandler(error.message);
     }
   }
 

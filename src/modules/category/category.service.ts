@@ -35,12 +35,12 @@ export class CategoryService {
     }
   }
 
-  async createCategory(name: string): Promise<Category> {
+  async createCategory(name: string, imgUrl: string): Promise<Category> {
     try {
       const isCategoryExist = await this.categoryModel.findOne({ name });
       let newCategory;
       if (!isCategoryExist) {
-        newCategory = new this.categoryModel({ name });
+        newCategory = new this.categoryModel({ name, img: imgUrl });
       } else {
         throw new BadRequestException('Category alreadt exist.');
       }
@@ -56,23 +56,22 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(id: string, nameToBEUpdated: string): Promise<Category> {
-    try {
-      console.log(id);
-      const category = await this.categoryModel.findById(id);
-      if (!category)
-        throw new NotFoundException(
-          `Cannot find any category with this id: ${id}`,
-        );
+  async updateCategory(id: string, name?: string, imageURL?: string) {
+    const category = await this.categoryModel.findById(id);
 
-      category.name = nameToBEUpdated;
-      await category.save();
-      return category;
-    } catch (error) {
-      throw new HttpException(
-        `Something went wrong while updating category, | ${error}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found.`);
     }
+
+    if (name) {
+      category.name = name;
+    }
+
+    // Update the imageURL if a new one is provided
+    if (imageURL) {
+      category.img = imageURL;
+    }
+
+    return category.save();
   }
 }
