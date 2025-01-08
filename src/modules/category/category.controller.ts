@@ -91,7 +91,6 @@ export class CategoryController {
       );
       imageURL = uploadImage.url;
     }
-    console.log(id, name);
 
     return this.categoryService.updateCategory(id, name, imageURL);
   }

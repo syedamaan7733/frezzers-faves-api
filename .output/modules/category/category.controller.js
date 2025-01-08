@@ -49,7 +49,6 @@ let CategoryController = class CategoryController {
             const uploadImage = await this.cloudinaryService.uploadImage(file, 'CATEGORIES');
             imageURL = uploadImage.url;
         }
-        console.log(id, name);
         return this.categoryService.updateCategory(id, name, imageURL);
     }
 };
