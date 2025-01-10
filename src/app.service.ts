@@ -8,7 +8,7 @@ export class AppService {
     <style>
         body {
             background-color: #000;
-            color: #0f0;
+            color: #74ee15;
             font-family: 'Courier New', monospace;
             height: 100vh;
             margin: 0;
