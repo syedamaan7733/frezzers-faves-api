@@ -35,6 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     payload: { sub: string; phoneNumber: string; role: string },
   ) {
     const token = req.cookies?.access_token;
+    
 
     if (!token || !(await this.tokenLogService.isTokenvalid(token))) {
       throw new UnauthorizedException('invalid or expired Token');
