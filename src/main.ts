@@ -8,14 +8,26 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS for all URLs
+  // app.enableCors({
+  //   origin: '*', // Allows all origins
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true, // Note: This is ineffective with 'origin: *'
+  // });
+
   app.enableCors({
-    origin: '*', // Allows all origins
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'https://www.freezerfavess.com',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Note: This is ineffective with 'origin: *'
+    credentials: true,
   });
 
   // Enable validation
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
 
   // Cookie Parser middleware
   app.use(cookieParser());
@@ -31,7 +43,7 @@ async function bootstrap() {
   await app.listen(port);
 
   console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`CORS is enabled for all origins.`);
+  // console.log(`CORS is enabled for all origins.`);
 }
 
 bootstrap();
