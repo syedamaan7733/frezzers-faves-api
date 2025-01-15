@@ -35,16 +35,18 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
         this.tokenLogService = tokenLogService;
     }
     static extractJwtFromCookie(req) {
+        console.log('Cookies received:', req.cookies);
         return req.cookies?.access_token || null;
     }
     async validate(req, payload) {
         const token = req.cookies?.access_token;
+        console.log('Token being validated:', token);
         if (!token || !(await this.tokenLogService.isTokenvalid(token))) {
-            throw new common_1.UnauthorizedException('invalid or expired Token');
+            throw new common_1.UnauthorizedException('Invalid or expired Token');
         }
         const user = await this.userModel.findById(payload.sub);
         if (!user)
-            throw new common_1.UnauthorizedException('Unauthorized..');
+            throw new common_1.UnauthorizedException('Unauthorized');
         return {
             userId: payload.sub,
             phoneNumber: payload.phoneNumber,

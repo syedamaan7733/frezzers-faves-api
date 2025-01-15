@@ -23,10 +23,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // cutom method to extract JWT from cookie
   private static extractJwtFromCookie(req: Request): string | null {
-    // console.log(req.cookies?.access_token || null);
-
+    console.log('Cookies received:', req.cookies);
     return req.cookies?.access_token || null;
   }
 
@@ -35,14 +33,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     payload: { sub: string; phoneNumber: string; role: string },
   ) {
     const token = req.cookies?.access_token;
-    
+    console.log('Token being validated:', token);
 
     if (!token || !(await this.tokenLogService.isTokenvalid(token))) {
-      throw new UnauthorizedException('invalid or expired Token');
+      throw new UnauthorizedException('Invalid or expired Token');
     }
 
     const user = await this.userModel.findById(payload.sub);
-    if (!user) throw new UnauthorizedException('Unauthorized..');
+    if (!user) throw new UnauthorizedException('Unauthorized');
+    
     return {
       userId: payload.sub,
       phoneNumber: payload.phoneNumber,
