@@ -40,7 +40,6 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
     }
     async validate(req, payload) {
         const token = req.cookies?.access_token;
-        console.log('Token being validated:', token);
         if (!token || !(await this.tokenLogService.isTokenvalid(token))) {
             throw new common_1.UnauthorizedException('Invalid or expired Token');
         }

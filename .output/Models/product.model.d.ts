@@ -1,10 +1,10 @@
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { Brand } from './brand.model';
 import { Category } from './category.model';
 export declare class Product extends Document {
     name: string;
-    brand: Brand | Types.ObjectId;
-    category: Category | Types.ObjectId;
+    brand: Brand;
+    category: Category;
     MRP: string;
     price: string;
     isFavorite: boolean;

@@ -14,64 +14,73 @@ import { CreateBrandDto } from '../brand/dto/create-brand.dto/create-brand.dto';
 import { CreateProductDto } from './dto/create-product.dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto/update-product.dto';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { Category } from 'src/Models/category.model';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Brand.name) private readonly brandModel: Model<Brand>,
+    @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
   ) {}
 
-  //   Method to Create a new Product
-  async createProduct(createProdcutDto: CreateProductDto): Promise<Product> {
+  async createProduct(createProductDto: CreateProductDto): Promise<Product> {
     try {
-      const isBrandAvailable = await this.brandModel.findById(
-        createProdcutDto.brand,
-      );
-      if (!isBrandAvailable) {
+      // Verify both brand and category exist
+      const [brand, category] = await Promise.all([
+        this.brandModel.findById(createProductDto.brand),
+        this.categoryModel.findById(createProductDto.category),
+      ]);
+
+      if (!brand) {
         throw new HttpException('Brand does not exist', HttpStatus.BAD_REQUEST);
       }
-      const newProdcut = new this.productModel(createProdcutDto);
-      await newProdcut.save();
 
-      return newProdcut;
+      if (!category) {
+        throw new HttpException(
+          'Category does not exist',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const newProduct = new this.productModel(createProductDto);
+      await newProduct.save();
+
+      return newProduct;
     } catch (error) {
       throw new BadRequestException(
-        `Something went wrong while uploading product, ${{ error: error.message }}`,
+        `Something went wrong while uploading product: ${error.message}`,
       );
     }
   }
 
-  // Most important controller
   async getAllProduct(): Promise<Product[]> {
     try {
+      // Autopopulate will handle the population automatically
       const products = await this.productModel
         .find()
-        .populate('brand', 'brandName')
         .exec();
-
       return products;
     } catch (error) {
       throw new BadRequestException(
-        `Something went wrong while fetching products, ${{ error: error.message }}`,
+        `Something went wrong while fetching products: ${error.message}`,
       );
     }
   }
 
-  // get Single Product
   async getOneProduct(id: string): Promise<Product> {
     try {
-      const product = await this.productModel
-        .findById(id)
-        .populate('brand', 'brandName')
-        .exec();
-      if (!product)
+      // Autopopulate will handle the population automatically
+      const product = await this.productModel.findById(id).exec();
+
+      if (!product) {
         throw new NotFoundException(`No product found with id: ${id}`);
+      }
 
       return product;
     } catch (error) {
       throw new BadRequestException(
-        `Some this wrong while fetching product detail, ${{ error: error.message }}`,
+        `Something went wrong while fetching product detail: ${error.message}`,
       );
     }
   }

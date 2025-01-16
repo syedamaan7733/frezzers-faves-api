@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from 'src/Models/product.model';
 import { Brand, BrandSchema } from 'src/Models/brand.model';
 import { ClounidaryModule } from 'src/common/clounidary/clounidary.module';
+import { Category, CategorySchema } from 'src/Models/category.model';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ClounidaryModule } from 'src/common/clounidary/clounidary.module';
     MongooseModule.forFeature([
       { name: Product.name, schema: ProductSchema },
       { name: Brand.name, schema: BrandSchema },
+      {name: Category.name, schema: CategorySchema}
     ]),
   ],
   controllers: [ProductsController],

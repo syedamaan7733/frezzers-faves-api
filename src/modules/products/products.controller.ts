@@ -45,23 +45,24 @@ export class ProductsController {
       if (body.tags || typeof body.tags === 'string') {
         body.tags = JSON.parse(body.tags);
       }
-
+      
       // addng image ul
       if (!file) {
         throw new BadRequestException("Can't Upload Without photo");
       }
-
+      
       const imgUpload = await this.cloundinaryService.uploadImage(
         file,
         'PRODUCTS',
       );
       body.image = imgUpload.secure_url;
-
+      
       // Create new DTO and overriding body in whole DTO by merging
       const createProductDTO = new CreateProductDto();
       Object.assign(createProductDTO, body);
-
+      
       const product = this.productService.createProduct(createProductDTO);
+
       return product;
     } catch (error) {
       throw new BadRequestException(`Invalid Format: ${error.message}`);

@@ -1,5 +1,5 @@
+// product.model.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { deepEqual } from 'assert';
 import { Document, Types } from 'mongoose';
 import { Brand } from './brand.model';
 import { Category } from './category.model';
@@ -17,11 +17,21 @@ export class Product extends Document {
   @Prop({ required: true, trim: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Brand', required: true })
-  brand: Brand | Types.ObjectId;
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Brand',
+    required: true,
+    autopopulate: true
+  })
+  brand: Brand;
 
-  @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
-  category: Category | Types.ObjectId;
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Category',
+    required: true,
+    autopopulate: true
+  })
+  category: Category;
 
   @Prop({ required: true, trim: true })
   MRP: string;
@@ -43,3 +53,6 @@ export class Product extends Document {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+// Enable autopopulate plugin
+ProductSchema.plugin(require('mongoose-autopopulate'));

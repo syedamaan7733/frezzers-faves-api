@@ -18,49 +18,54 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const brand_model_1 = require("../../Models/brand.model");
 const product_model_1 = require("../../Models/product.model");
+const category_model_1 = require("../../Models/category.model");
 let ProductsService = class ProductsService {
-    constructor(productModel, brandModel) {
+    constructor(productModel, brandModel, categoryModel) {
         this.productModel = productModel;
         this.brandModel = brandModel;
+        this.categoryModel = categoryModel;
     }
-    async createProduct(createProdcutDto) {
+    async createProduct(createProductDto) {
         try {
-            const isBrandAvailable = await this.brandModel.findById(createProdcutDto.brand);
-            if (!isBrandAvailable) {
+            const [brand, category] = await Promise.all([
+                this.brandModel.findById(createProductDto.brand),
+                this.categoryModel.findById(createProductDto.category),
+            ]);
+            if (!brand) {
                 throw new common_1.HttpException('Brand does not exist', common_1.HttpStatus.BAD_REQUEST);
             }
-            const newProdcut = new this.productModel(createProdcutDto);
-            await newProdcut.save();
-            return newProdcut;
+            if (!category) {
+                throw new common_1.HttpException('Category does not exist', common_1.HttpStatus.BAD_REQUEST);
+            }
+            const newProduct = new this.productModel(createProductDto);
+            await newProduct.save();
+            return newProduct;
         }
         catch (error) {
-            throw new common_1.BadRequestException(`Something went wrong while uploading product, ${{ error: error.message }}`);
+            throw new common_1.BadRequestException(`Something went wrong while uploading product: ${error.message}`);
         }
     }
     async getAllProduct() {
         try {
             const products = await this.productModel
                 .find()
-                .populate('brand', 'brandName')
                 .exec();
             return products;
         }
         catch (error) {
-            throw new common_1.BadRequestException(`Something went wrong while fetching products, ${{ error: error.message }}`);
+            throw new common_1.BadRequestException(`Something went wrong while fetching products: ${error.message}`);
         }
     }
     async getOneProduct(id) {
         try {
-            const product = await this.productModel
-                .findById(id)
-                .populate('brand', 'brandName')
-                .exec();
-            if (!product)
+            const product = await this.productModel.findById(id).exec();
+            if (!product) {
                 throw new common_1.NotFoundException(`No product found with id: ${id}`);
+            }
             return product;
         }
         catch (error) {
-            throw new common_1.BadRequestException(`Some this wrong while fetching product detail, ${{ error: error.message }}`);
+            throw new common_1.BadRequestException(`Something went wrong while fetching product detail: ${error.message}`);
         }
     }
     async updateProduct(id, updateProductDTO) {
@@ -86,7 +91,9 @@ exports.ProductsService = ProductsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(product_model_1.Product.name)),
     __param(1, (0, mongoose_1.InjectModel)(brand_model_1.Brand.name)),
+    __param(2, (0, mongoose_1.InjectModel)(category_model_1.Category.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model,
         mongoose_2.Model])
 ], ProductsService);
 //# sourceMappingURL=products.service.js.map

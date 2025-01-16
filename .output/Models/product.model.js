@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductSchema = exports.Product = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const brand_model_1 = require("./brand.model");
+const category_model_1 = require("./category.model");
 let Product = class Product extends mongoose_2.Document {
 };
 exports.Product = Product;
@@ -20,12 +22,22 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'Brand', required: true }),
-    __metadata("design:type", Object)
+    (0, mongoose_1.Prop)({
+        type: mongoose_2.Types.ObjectId,
+        ref: 'Brand',
+        required: true,
+        autopopulate: true
+    }),
+    __metadata("design:type", brand_model_1.Brand)
 ], Product.prototype, "brand", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'Category', required: true }),
-    __metadata("design:type", Object)
+    (0, mongoose_1.Prop)({
+        type: mongoose_2.Types.ObjectId,
+        ref: 'Category',
+        required: true,
+        autopopulate: true
+    }),
+    __metadata("design:type", category_model_1.Category)
 ], Product.prototype, "category", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, trim: true }),
@@ -62,4 +74,5 @@ exports.Product = Product = __decorate([
     })
 ], Product);
 exports.ProductSchema = mongoose_1.SchemaFactory.createForClass(Product);
+exports.ProductSchema.plugin(require('mongoose-autopopulate'));
 //# sourceMappingURL=product.model.js.map
