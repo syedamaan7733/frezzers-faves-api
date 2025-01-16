@@ -38,7 +38,7 @@ let AuthController = class AuthController {
                 httpOnly: true,
                 expires: new Date(0),
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             });
         }
     }

@@ -48,15 +48,21 @@ let ProductsController = class ProductsController {
             throw new common_1.BadRequestException(`Invalid Format: ${error.message}`);
         }
     }
-    async getAllProducts() {
-        const products = await this.productService.getAllProduct();
-        return { products, totalProducts: products.length };
+    async getAllProducts(page = 1, limit = 10) {
+        const { products, totalProducts, totalPages } = await this.productService.getAllProduct(page, limit);
+        return {
+            products,
+            totalProducts,
+            currentPage: page,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        };
     }
     async getDistinctCategory() {
         return this.productService.getDistictCategory();
     }
     async getOneProduct(id) {
-        console.log('leak');
         return this.productService.getOneProduct(id);
     }
     async updateProduct(id, body, file) {
@@ -86,8 +92,10 @@ __decorate([
 ], ProductsController.prototype, "createProduct", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getAllProducts", null);
 __decorate([

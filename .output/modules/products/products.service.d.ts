@@ -10,7 +10,15 @@ export declare class ProductsService {
     private readonly categoryModel;
     constructor(productModel: Model<Product>, brandModel: Model<Brand>, categoryModel: Model<Category>);
     createProduct(createProductDto: CreateProductDto): Promise<Product>;
-    getAllProduct(): Promise<Product[]>;
+    getAllProduct(page?: number, limit?: number): Promise<{
+        products: (import("mongoose").Document<unknown, {}, Product> & Product & Required<{
+            _id: unknown;
+        }> & {
+            __v: number;
+        })[];
+        totalProducts: number;
+        totalPages: number;
+    }>;
     getOneProduct(id: string): Promise<Product>;
     updateProduct(id: string, updateProductDTO: UpdateProductDto): Promise<import("mongoose").Document<unknown, {}, Product> & Product & Required<{
         _id: unknown;

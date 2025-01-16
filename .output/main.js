@@ -17,7 +17,12 @@ async function bootstrap() {
         ],
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+        allowedHeaders: [
+            'Content-Type',
+            'Authorization',
+            'Accept',
+            'X-Requested-With',
+        ],
     });
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
     app.use(cookieParser());

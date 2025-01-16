@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -33,20 +34,16 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  // telling server to temporoary save the file in memeory
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
-  // init params
   async createProduct(
     @Body() body: any,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      // converting price to JSON Array/Object
       if (body.tags || typeof body.tags === 'string') {
         body.tags = JSON.parse(body.tags);
       }
       
-      // addng image ul
       if (!file) {
         throw new BadRequestException("Can't Upload Without photo");
       }
@@ -57,7 +54,6 @@ export class ProductsController {
       );
       body.image = imgUpload.secure_url;
       
-      // Create new DTO and overriding body in whole DTO by merging
       const createProductDTO = new CreateProductDto();
       Object.assign(createProductDTO, body);
       
@@ -70,12 +66,23 @@ export class ProductsController {
   }
 
   @Get()
-  async getAllProducts() {
-    const products = await this.productService.getAllProduct();
-    return { products, totalProducts: products.length };
+  async getAllProducts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    const { products, totalProducts, totalPages } = await this.productService.getAllProduct(
+      page,
+      limit
+    );
+    return { 
+      products, 
+      totalProducts,
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1
+    };
   }
-
-  // Distinct Category
 
   @Get('Distinctcategory')
   async getDistinctCategory() {
@@ -84,7 +91,6 @@ export class ProductsController {
 
   @Get(':id')
   async getOneProduct(@Param('id') id: string) {
-    console.log('leak');
     return this.productService.getOneProduct(id);
   }
 

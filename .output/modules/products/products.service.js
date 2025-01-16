@@ -45,12 +45,24 @@ let ProductsService = class ProductsService {
             throw new common_1.BadRequestException(`Something went wrong while uploading product: ${error.message}`);
         }
     }
-    async getAllProduct() {
+    async getAllProduct(page = 1, limit = 10) {
         try {
-            const products = await this.productModel
-                .find()
-                .exec();
-            return products;
+            const skip = (page - 1) * limit;
+            const [products, totalProducts] = await Promise.all([
+                this.productModel
+                    .find()
+                    .sort({ createdAt: -1 })
+                    .skip(skip)
+                    .limit(limit)
+                    .exec(),
+                this.productModel.countDocuments(),
+            ]);
+            const totalPages = Math.ceil(totalProducts / limit);
+            return {
+                products,
+                totalProducts,
+                totalPages,
+            };
         }
         catch (error) {
             throw new common_1.BadRequestException(`Something went wrong while fetching products: ${error.message}`);

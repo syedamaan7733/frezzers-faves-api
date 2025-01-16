@@ -26,7 +26,6 @@ export class ProductsService {
 
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
     try {
-      // Verify both brand and category exist
       const [brand, category] = await Promise.all([
         this.brandModel.findById(createProductDto.brand),
         this.categoryModel.findById(createProductDto.category),
@@ -54,13 +53,27 @@ export class ProductsService {
     }
   }
 
-  async getAllProduct(): Promise<Product[]> {
+  async getAllProduct(page: number = 1, limit: number = 10) {
     try {
-      // Autopopulate will handle the population automatically
-      const products = await this.productModel
-        .find()
-        .exec();
-      return products;
+      const skip = (page - 1) * limit;
+
+      const [products, totalProducts] = await Promise.all([
+        this.productModel
+          .find()
+          .sort({ createdAt: -1 }) // Sort by newest first
+          .skip(skip)
+          .limit(limit)
+          .exec(),
+        this.productModel.countDocuments(),
+      ]);
+
+      const totalPages = Math.ceil(totalProducts / limit);
+
+      return {
+        products,
+        totalProducts,
+        totalPages,
+      };
     } catch (error) {
       throw new BadRequestException(
         `Something went wrong while fetching products: ${error.message}`,
@@ -70,7 +83,6 @@ export class ProductsService {
 
   async getOneProduct(id: string): Promise<Product> {
     try {
-      // Autopopulate will handle the population automatically
       const product = await this.productModel.findById(id).exec();
 
       if (!product) {
