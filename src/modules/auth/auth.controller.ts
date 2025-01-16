@@ -23,7 +23,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenLogService: TokenLogService,
-  ) { }
+  ) {}
 
   private setCookie(response: Response, token: string, exp = false) {
     if (!exp) {
@@ -42,6 +42,8 @@ export class AuthController {
       });
     }
   }
+
+  // For Register
   @Post('register')
   async register(
     @Body() createUserDto: CreateUserDto,
@@ -56,7 +58,7 @@ export class AuthController {
     this.setCookie(response, access_token);
     return userInfo;
   }
-
+  // For Login
   @Post('login')
   async login(
     @Body() loginDto: LogInDto,
@@ -87,5 +89,19 @@ export class AuthController {
   getProfile(@Request() req) {
     // console.log(req);
     return req.user;
+  }
+
+  // For Authenticating
+  @UseGuards(JwtAuthGuard)
+  @Get('check')
+  async checkAuth(@Request() req) {
+    return {
+      isAuthenticated: true,
+      user: {
+        userId: req.user.userId,
+        phoneNumber: req.user.phoneNumber,
+        role: req.user.role,
+      },
+    };
   }
 }
