@@ -66,6 +66,16 @@ let AuthController = class AuthController {
     getProfile(req) {
         return req.user;
     }
+    async checkAuth(req) {
+        return {
+            isAuthenticated: true,
+            user: {
+                userId: req.user.userId,
+                phoneNumber: req.user.phoneNumber,
+                role: req.user.role,
+            },
+        };
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -100,6 +110,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('check'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "checkAuth", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

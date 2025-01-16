@@ -24,4 +24,12 @@ export declare class AuthController {
         message: string;
     }>;
     getProfile(req: any): any;
+    checkAuth(req: any): Promise<{
+        isAuthenticated: boolean;
+        user: {
+            userId: any;
+            phoneNumber: any;
+            role: any;
+        };
+    }>;
 }
