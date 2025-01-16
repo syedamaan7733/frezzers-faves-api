@@ -26,7 +26,7 @@ __decorate([
         type: mongoose_2.Types.ObjectId,
         ref: 'Brand',
         required: true,
-        autopopulate: true
+        autopopulate: true,
     }),
     __metadata("design:type", brand_model_1.Brand)
 ], Product.prototype, "brand", void 0);
@@ -35,7 +35,7 @@ __decorate([
         type: mongoose_2.Types.ObjectId,
         ref: 'Category',
         required: true,
-        autopopulate: true
+        autopopulate: true,
     }),
     __metadata("design:type", category_model_1.Category)
 ], Product.prototype, "category", void 0);
@@ -58,6 +58,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Product.prototype, "image", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Boolean, default: true }),
+    __metadata("design:type", Boolean)
+], Product.prototype, "inStock", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: [String], default: [] }),
     __metadata("design:type", Array)

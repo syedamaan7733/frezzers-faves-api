@@ -37,6 +37,10 @@ export class CreateProductDto {
   @IsOptional()
   image?: string; // URL of the uploaded image
 
+  @IsBoolean()
+  @IsOptional()
+  inStock?: boolean;
+
   @IsArray()
   @IsString({ each: true })
   @IsOptional()

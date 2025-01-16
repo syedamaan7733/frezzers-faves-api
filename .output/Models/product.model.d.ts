@@ -9,6 +9,7 @@ export declare class Product extends Document {
     price: string;
     isFavorite: boolean;
     image: string;
+    inStock: boolean;
     tags: string[];
 }
 export declare const ProductSchema: import("mongoose").Schema<Product, import("mongoose").Model<Product, any, any, any, Document<unknown, any, Product> & Product & Required<{

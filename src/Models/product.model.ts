@@ -21,7 +21,7 @@ export class Product extends Document {
     type: Types.ObjectId,
     ref: 'Brand',
     required: true,
-    autopopulate: true
+    autopopulate: true,
   })
   brand: Brand;
 
@@ -29,7 +29,7 @@ export class Product extends Document {
     type: Types.ObjectId,
     ref: 'Category',
     required: true,
-    autopopulate: true
+    autopopulate: true,
   })
   category: Category;
 
@@ -47,6 +47,9 @@ export class Product extends Document {
     message: 'Please provide the image',
   })
   image: string;
+
+  @Prop({ type: Boolean, default: true })
+  inStock: boolean;
 
   @Prop({ type: [String], default: [] })
   tags: string[];

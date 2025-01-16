@@ -6,5 +6,6 @@ export declare class CreateProductDto {
     price?: string;
     isFavorite?: boolean;
     image?: string;
+    inStock?: boolean;
     tags?: string[];
 }
