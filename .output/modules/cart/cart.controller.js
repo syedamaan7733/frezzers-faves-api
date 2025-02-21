@@ -17,9 +17,19 @@ const common_1 = require("@nestjs/common");
 const cart_service_1 = require("./cart.service");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const rxjs_1 = require("rxjs");
+const class_validator_1 = require("class-validator");
 class AddToCartDto {
 }
 exports.AddToCartDto = AddToCartDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], AddToCartDto.prototype, "productId", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], AddToCartDto.prototype, "quantity", void 0);
 let CartController = class CartController {
     constructor(cartService) {
         this.cartService = cartService;
@@ -30,7 +40,6 @@ let CartController = class CartController {
                 throw new common_1.BadRequestException('Product ID and quantity are required');
             }
             const userId = req.user.userId;
-            console.log(req.user);
             const cart = await this.cartService.addTOCart(userId, addToCartDTO.productId, addToCartDTO.quantity);
             return {
                 success: true,

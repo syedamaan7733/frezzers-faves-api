@@ -12,10 +12,15 @@ import {
 import { CartService } from './cart.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { NotFoundError } from 'rxjs';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 // DTO for adding items in the cart
 export class AddToCartDto {
+  @IsString()
+  @IsNotEmpty()
   productId: string;
+
+  @IsNumber()
   quantity: number;
 }
 @Controller('cart')
@@ -30,14 +35,13 @@ export class CartController {
         throw new BadRequestException('Product ID and quantity are required');
       }
       const userId = req.user.userId;
-      console.log(req.user);
+      // console.log(req.user);
 
       const cart = await this.cartService.addTOCart(
         userId,
         addToCartDTO.productId,
         addToCartDTO.quantity,
       );
-
       return {
         success: true,
         message: 'Item added to cart successfully',
