@@ -35,7 +35,8 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
         this.tokenLogService = tokenLogService;
     }
     static extractJwtFromCookie(req) {
-        console.log('Cookies received:', req.cookies);
+        const cookie_crum = req.cookies.access_token?.split('');
+        console.log('Cookies received:', cookie_crum.slice(cookie_crum.length - 1 - 5, cookie_crum.length - 1).join(''));
         return req.cookies?.access_token || null;
     }
     async validate(req, payload) {
@@ -45,7 +46,8 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
         }
         const user = await this.userModel.findById(payload.sub);
         if (!user)
-            throw new common_1.UnauthorizedException('Unauthorized');
+            throw new common_1.UnauthorizedException('Unauthorized Token');
+        console.log(`For: ${user.name} Role: ${user.role} From: ${req?.rawHeaders[9]}`);
         return {
             userId: payload.sub,
             phoneNumber: payload.phoneNumber,

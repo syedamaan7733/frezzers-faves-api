@@ -24,7 +24,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   private static extractJwtFromCookie(req: Request): string | null {
-    console.log('Cookies received:', req.cookies);
+    const cookie_crum = req.cookies.access_token?.split('');
+    console.log(
+      'Cookies received:',
+      cookie_crum.slice(cookie_crum.length - 1 - 5, cookie_crum.length - 1).join(''),
+    );
     return req.cookies?.access_token || null;
   }
 
@@ -40,8 +44,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     const user = await this.userModel.findById(payload.sub);
-    if (!user) throw new UnauthorizedException('Unauthorized');
-    
+    if (!user) throw new UnauthorizedException('Unauthorized Token');
+    console.log(`For: ${user.name} Role: ${user.role} From: ${req?.rawHeaders[9]}`);
     return {
       userId: payload.sub,
       phoneNumber: payload.phoneNumber,

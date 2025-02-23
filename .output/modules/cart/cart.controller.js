@@ -40,11 +40,12 @@ let CartController = class CartController {
                 throw new common_1.BadRequestException('Product ID and quantity are required');
             }
             const userId = req.user.userId;
+            console.log(req.user);
             const cart = await this.cartService.addTOCart(userId, addToCartDTO.productId, addToCartDTO.quantity);
             return {
                 success: true,
                 message: 'Item added to cart successfully',
-                data: cart,
+                data: "cart",
             };
         }
         catch (error) {

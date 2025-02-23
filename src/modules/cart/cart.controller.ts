@@ -29,13 +29,13 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post('add')
-  async addTOCart(@Request() req, @Body() addToCartDTO: AddToCartDto) {
+  async addTOCart(@Request() req, @Body() addToCartDTO: AddToCartDto,) {
     try {
       if (!addToCartDTO.productId || !addToCartDTO.quantity) {
         throw new BadRequestException('Product ID and quantity are required');
       }
       const userId = req.user.userId;
-      // console.log(req.user);
+      console.log(req.user);
 
       const cart = await this.cartService.addTOCart(
         userId,
@@ -45,7 +45,7 @@ export class CartController {
       return {
         success: true,
         message: 'Item added to cart successfully',
-        data: cart,
+        data: "cart",
       };
     } catch (error) {
       if (error instanceof NotFoundError) {

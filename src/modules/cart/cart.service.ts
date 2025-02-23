@@ -31,8 +31,7 @@ export class CartService {
 
     const existingItemIndex = cart.items.findIndex(
       (item) => item.product.toString() === productId,
-    );
-
+    ); 
     if (existingItemIndex > -1) {
       cart.items[existingItemIndex].quantity += quantity;
     } else {
