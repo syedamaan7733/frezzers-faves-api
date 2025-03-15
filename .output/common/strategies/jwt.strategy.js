@@ -36,7 +36,9 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
     }
     static extractJwtFromCookie(req) {
         const cookie_crum = req.cookies.access_token?.split('');
-        console.log('Cookies received:', cookie_crum.slice(cookie_crum.length - 1 - 5, cookie_crum.length - 1).join(''));
+        console.log('Cookies received:', cookie_crum
+            .slice(cookie_crum.length - 1 - 5, cookie_crum.length - 1)
+            .join(''));
         return req.cookies?.access_token || null;
     }
     async validate(req, payload) {
@@ -48,8 +50,10 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
         if (!user)
             throw new common_1.UnauthorizedException('Unauthorized Token');
         console.log(`For: ${user.name} Role: ${user.role} From: ${req?.rawHeaders[9]}`);
+        console.log(user);
         return {
             userId: payload.sub,
+            name: user.name,
             phoneNumber: payload.phoneNumber,
             role: payload.role,
         };

@@ -28,6 +28,7 @@ export declare class AuthController {
         isAuthenticated: boolean;
         user: {
             userId: any;
+            name: any;
             phoneNumber: any;
             role: any;
         };

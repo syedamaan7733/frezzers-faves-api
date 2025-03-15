@@ -95,10 +95,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('check')
   async checkAuth(@Request() req) {
+    console.log(req.user);
+
     return {
       isAuthenticated: true,
       user: {
         userId: req.user.userId,
+        name: req.user.name,
         phoneNumber: req.user.phoneNumber,
         role: req.user.role,
       },
